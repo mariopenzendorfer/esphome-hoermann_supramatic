@@ -297,7 +297,7 @@ char* UAPBridge_esp::print_data(uint8_t *p_data, uint8_t from, uint8_t to) {
 	char temp[4];
 	static char output[30];
 
-	sprintf(output, "%5u: ", millis() & 0xFFFFu);
+  sprintf(output, "%5lu: ", millis() & 0xFFFFu);
 	for (uint8_t i = from; i < to; i++) {
 		sprintf(temp, "%02X ", p_data[i]);
 		strcat(output, temp);
