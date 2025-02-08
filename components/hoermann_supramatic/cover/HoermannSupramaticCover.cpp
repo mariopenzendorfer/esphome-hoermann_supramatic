@@ -72,8 +72,6 @@ namespace esphome
             }
 
             this->publish_state();
-
-            ESP_LOGI(TAG, "Status updated");
         }
     } // namespace hoermann_supramatic
 } // namespace esphome

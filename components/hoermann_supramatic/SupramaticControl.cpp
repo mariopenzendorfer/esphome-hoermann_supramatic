@@ -35,6 +35,10 @@ namespace esphome
                     _broadcastStatus = buffer[2] | ((uint16_t)buffer[3] << 8);
                     parse_status();
                 }
+                else
+                {
+                    ESP_LOGI(TAG, "Invalid message %d %d", address, length);
+                }
             }
             else if (address == 0x28)
             {
@@ -43,12 +47,28 @@ namespace esphome
                 if (length == 0x02 && command == 0x01)
                 {
                     send_command(SupramaticCommand::SCAN, counter);
+
+                    ESP_LOGI(TAG, "Sending scan command");
                 }
                 else if (length == 0x01 && command == 0x20)
                 {
                     send_command(_command, counter);
+
+                    if(_command != SupramaticCommand::IDLE)
+                    {
+                        ESP_LOGI(TAG, "Sending command");
+                    }
+
                     _command = SupramaticCommand::IDLE;
                 }
+                else
+                {
+                    ESP_LOGI(TAG, "Invalid message %d %d", address, length);
+                }
+            }
+            else
+            {
+                ESP_LOGI(TAG, "Invalid message %d %d", address, length);
             }
         }
 
@@ -63,7 +83,7 @@ namespace esphome
 
         void SupramaticControl::set_action(SupramaticControl::Action action)
         {
-            ESP_LOGW(TAG, "Received action %d", action);
+            ESP_LOGI(SupramaticControl::TAG, "Received action %d", action);
 
             switch (action)
             {
@@ -102,6 +122,8 @@ namespace esphome
 
         void SupramaticControl::parse_status()
         {
+            ESP_LOGI(SupramaticControl::TAG, "Received status %x", _broadcastStatus);
+
             uint8_t statusByte0 = (uint8_t)_broadcastStatus & 0x00FF;
             uint8_t statusByte1 = (uint8_t)(_broadcastStatus >> 8) & 0x00FF;
 
@@ -136,8 +158,6 @@ namespace esphome
             {
                 client->OnStatusUpdated(_status);
             }
-
-            ESP_LOGW(TAG, "Received status %x", _broadcastStatus);
         }
 
         void SupramaticControl::register_client(SupramaticControlClient *client)
