@@ -18,10 +18,11 @@ from esphome.const import (
 
 DEPENDENCIES = ["uart"]
 
-hoermann_supramatic_ns = cg.esphome_ns.namespace("hoermann_suparamatic")
+hoermann_supramatic_ns = cg.esphome_ns.namespace("hoermann_supramatic")
 SupramaticControlComponent = hoermann_supramatic_ns.class_(
     "SupramaticControl", cg.Component, uart.UARTDevice
 )
+SupramaticControlClient = hoermann_supramatic_ns.class_("SupramaticControlClient")
 
 CONFIG_SCHEMA = (
     cv.Schema(
@@ -64,9 +65,16 @@ CONF_SUPRAMATIC_CONTROL_CLIENT_ID = "supramatic_control_client_id"
 
 SUPRAMATIC_CONTROL_CLIENT_SCHEMA = cv.Schema(
     {
-        cv.GenerateID(CONF_SUPRAMATIC_CONTROL_CLIENT_ID): cv.use_id(SupramaticControlComponent),
+        cv.GenerateID(CONF_SUPRAMATIC_CONTROL_CLIENT_ID): cv.use_id(
+            SupramaticControlComponent
+        ),
     }
 )
+
+
+async def register_supramatic_control_client(var, config):
+    parent = await cg.get_variable(config[CONF_SUPRAMATIC_CONTROL_CLIENT_ID])
+    cg.add(parent.register_supramatic_control_client(var))
 
 
 async def to_code(config):
