@@ -18,9 +18,11 @@ cover:
 
 ## RJ11
 
-1 Not clear
-2 24VDC
-3 GND
-4 Not clear
-5 RS485, DATA-
-6 RS485, DATA+
+Pin | Name
+----|------
+1 | unknown
+2 | 24VDC
+3 | GND
+4 | unknown
+5 | RS485, DATA-
+6 | RS485, DATA+
