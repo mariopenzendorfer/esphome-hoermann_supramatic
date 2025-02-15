@@ -1,0 +1,108 @@
+substitutions:
+  name: "supramatic-e3"
+  friendly_name: "Garagentor"
+  state: "State"
+  opening: "Öffnen"
+  closing: "Schließen"
+  open: "Offen"
+  closed: "Geschlossen"
+  stopped: "Gestoppt"
+  venting: "Lüften"
+  error: "Fehler"
+  relay_state: "Relaisstatus"
+  got_valid_broadcast: "Kommunikationsstatus" 
+  error_state: "Fehlerstatus" 
+  prewarn_state: "Prewarn Status" 
+  light: "${friendly_name} Licht"
+  sw_vent: "${friendly_name} Lüften" 
+  sw_light: "Licht" 
+  btn_vent: "${friendly_name} Lüften" 
+  btn_impulse: "${friendly_name} Impuls" 
+
+esphome:
+  name: hoermann_supramatic_esp32c6
+  friendly_name: "Hoermann Supramatic ESP32-C6"
+
+logger:
+
+esp32:
+  board: esp32-c6-devkitc-1
+  variant: esp32c6
+  framework:
+    type: esp-idf
+
+uart:
+  id: uart_bus
+  tx_pin: GPIO5
+  rx_pin: GPIO4
+  baud_rate: 19200
+
+external_components:
+    - source: github://mariopenzendorfer/esphome-hoermann_supramatic_3e
+      refresh: 0s
+
+api:
+  encryption:
+    key: "..."
+
+ota:
+  - platform: esphome
+    password: "..."
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+  ap:
+    ssid: "Hoermann-Supramatic-Esp8266"
+    password: "MC5irfWVOI8g"
+
+uapbridge_esp:
+  id: garage_door_comp
+  uart_id: uart_bus
+  auto_correction: true
+
+cover:
+  - platform: uapbridge
+    name: ${friendly_name}
+    device_class: garage
+
+binary_sensor:
+  - platform: uapbridge
+    relay_state:
+      name: "${relay_state}"
+    error_state:
+      name: "${error_state}"
+    prewarn_state:
+      name: "${prewarn_state}"
+    got_valid_broadcast:
+      name: "${got_valid_broadcast}"
+
+output:
+  - platform: uapbridge
+    id: gd_light
+
+light:
+  - platform: uapbridge
+    id: my_light
+    name: "${light}"
+    output: gd_light
+
+sensor:
+  - platform: wifi_signal
+    name: "WLAN Signalstärke"
+    update_interval: 15s
+    entity_category: "diagnostic"
+
+text_sensor:
+  - platform: uapbridge
+    id: garage_door_state
+    name: "${state}"
+
+button:
+  - platform: uapbridge
+    vent_button:
+      id: button_vent
+      name: "${btn_vent}"
+    impulse_button:
+      id: button_impulse
+      name: "${btn_impulse}"
