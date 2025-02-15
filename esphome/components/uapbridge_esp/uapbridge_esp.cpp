@@ -311,25 +311,25 @@ void UAPBridge_esp::handle_state_change(hoermann_state_t new_state) {
   ESP_LOGV(TAG, "State changed from %s to %d", this->state_string.c_str(), new_state);
   switch (new_state) {
     case hoermann_state_open:
-      this->state_string = "Open";
+      this->state_string = "Offen";
       break;
     case hoermann_state_closed:
-      this->state_string = "Closed";
+      this->state_string = "Geschlossen";
       break;
     case hoermann_state_opening:
-      this->state_string = "Opening";
+      this->state_string = "Öffnen";
       break;
     case hoermann_state_closing:
-      this->state_string = "Closing";
+      this->state_string = "Schließen";
       break;
     case hoermann_state_venting:
-      this->state_string = "Venting";
+      this->state_string = "Lüften";
       break;
     case hoermann_state_stopped:
-      this->state_string = "Stopped";
+      this->state_string = "Gestoppt";
       break;
     default:
-      this->state_string = "Error";
+      this->state_string = "Fehler";
       break;
   }
 
