@@ -12,7 +12,7 @@ cover::CoverTraits UAPBridgeCover::get_traits() {
   auto traits = cover::CoverTraits();
   traits.set_is_assumed_state(false);
   traits.set_supports_position(false);
-  traits.set_supports_stop(false);
+  traits.set_supports_stop(true);
   traits.set_supports_tilt(false);
   traits.set_supports_toggle(true);
   return traits;
